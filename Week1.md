@@ -1,4 +1,3 @@
-Week1
 
 >**Name:** BoredHackerBlog: Social Network
 >
